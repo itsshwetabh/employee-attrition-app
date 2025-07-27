@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 import joblib
+import os
 
 app = Flask(__name__)
 
@@ -27,5 +28,5 @@ def predict():
     
     return jsonify({'prediction': int(prediction)})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
