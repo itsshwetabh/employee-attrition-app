@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employee Attrition Predictor</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-200 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-xl">
+    <h2 class="text-3xl font-bold text-center mb-6 text-purple-700">Employee Attrition Predictor</h2>
+    
+    <form id="predictionForm" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <input type="number" step="any" name="satisfaction_level" placeholder="Satisfaction Level" required class="input">
+        <input type="number" step="any" name="last_evaluation" placeholder="Last Evaluation" required class="input">
+        <input type="number" name="number_project" placeholder="Number of Projects" required class="input">
+        <input type="number" name="average_montly_hours" placeholder="Monthly Hours" required class="input">
+        <input type="number" name="time_spend_company" placeholder="Years at Company" required class="input">
+        <input type="number" name="Work_accident" placeholder="Work Accident (0 or 1)" required class="input">
+        <input type="number" name="promotion_last_5years" placeholder="Promotion in Last 5 Years (0 or 1)" required class="input">
+        <input type="number" name="low" placeholder="Low Salary (1 or 0)" required class="input">
+        <input type="number" name="medium" placeholder="Medium Salary (1 or 0)" required class="input">
+      </div>
+
+      <button type="submit" class="w-full mt-4 bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg font-semibold transition">Predict</button>
+    </form>
+
+    <div id="result" class="mt-6 text-xl text-center text-purple-800 font-medium"></div>
+  </div>
+
+  <script>
+    document.getElementById('predictionForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      const data = {};
+      formData.forEach((value, key) => data[key] = parseFloat(value));
+
+      try {
+        const response = await fetch('http://127.0.0.1:5000/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        document.getElementById('result').innerText = `Prediction: ${result.prediction}`;
+      } catch (error) {
+        document.getElementById('result').innerText = 'Error fetching prediction.';
+        console.error(error);
+      }
+    });
+  </script>
+
+  <style>
+    .input {
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .input:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+    }
+  </style>
+</body>
+</html>
