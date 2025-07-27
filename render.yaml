@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: employee-attrition-app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    region: oregon  # or leave default
+    plan: free
+    branch: main
+    autoDeploy: true
